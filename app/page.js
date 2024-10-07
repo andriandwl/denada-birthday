@@ -50,28 +50,60 @@ const styles = {
     color: "#fff",
     marginBottom: "20px",
     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+    "@media (maxWidth: 768px)": {
+      fontSize: "2.5rem",
+    },
+    "@media (maxWidth: 480px)": {
+      fontSize: "2rem",
+    },
   },
   body: {
     fontSize: "2rem",
     color: "#fff",
     marginBottom: "20px",
     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+    "@media (maxWidth: 768px)": {
+      fontSize: "1.5rem",
+    },
+    "@media (maxWidth: 480px)": {
+      fontSize: "1.2rem",
+    },
   },
   countdown: {
     fontSize: "1.5rem",
     color: "#fff",
     marginBottom: "20px",
     textShadow: "1px 1px 3px rgba(0, 0, 0, 0.3)",
+    "@media (maxWidth: 768px)": {
+      fontSize: "1.2rem",
+    },
+    "@media (maxWidth: 480px)": {
+      fontSize: "1rem",
+    },
   },
   lottieContainer: {
     width: "300px",
     height: "300px",
     marginBottom: "500px",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    "@media (maxWidth: 768px)": {
+      width: "200px",
+      height: "200px",
+    },
+    "@media (maxWidth: 480px)": {
+      width: "150px",
+      height: "150px",
+    },
   },
   lottieLarge: {
-    width: "100%",
-    height: "100%",
+    "@media (maxWidth: 768px)": {
+      width: "50%",
+      height: "50%",
+    },
+    "@media (maxWidth: 480px)": {
+      width: "50%",
+      height: "50%",
+    },
   },
   balloonAnimationContainer: {
     position: "fixed",
@@ -92,10 +124,24 @@ const styles = {
     cursor: "pointer",
     boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.3)",
     transition: "background-color 0.3s, transform 0.3s",
+    "@media (maxWidth: 768px)": {
+      fontSize: "1.2rem",
+      padding: "10px 20px",
+    },
+    "@media (maxWidth: 480px)": {
+      fontSize: "1rem",
+      padding: "8px 16px",
+    },
   },
   canvasContainer: {
     width: "100%",
     height: "500px",
+    "@media (maxWidth: 768px)": {
+      height: "400px",
+    },
+    "@media (maxWidth: 480px)": {
+      height: "300px",
+    },
   },
   confettiContainer: {
     position: "fixed",
@@ -115,6 +161,14 @@ const styles = {
     pointerEvents: "none",
     transform: "translateX(-50%)",
     zIndex: -1,
+    "@media (maxWidth: 768px)": {
+      width: "80vw",
+      height: "50vh",
+    },
+    "@media (maxWidth: 480px)": {
+      width: "90vw",
+      height: "40vh",
+    },
   },
   particles: {
     position: "absolute",
@@ -127,6 +181,14 @@ const styles = {
   parallaxContainer: {
     width: "100%",
     marginBottom: "10px",
+    "@media (maxWidth: 768px)": {
+      width: "50%",
+      height: "20px",
+    },
+    "@media (maxWidth: 480px)": {
+      width: "40%",
+      height: "20px",
+    },
   },
 };
 
