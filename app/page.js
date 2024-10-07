@@ -1,101 +1,342 @@
-import Image from "next/image";
+"use client";
+import React, { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
+import { Player } from "@lottiefiles/react-lottie-player";
+import { Howl } from "howler";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Stars } from "@react-three/drei";
+import { Particles } from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
+import { Parallax } from "react-parallax";
+import dayjs from "dayjs";
+import birthdayCakeAnimation from "./assets/lilin.json";
+import balloonsAnimation from "./assets/balloons.json";
+import confettiAnimation from "./assets/conffeti.json";
+import fireworksAnimation from "./assets/fireworks.json";
+import { particlesConfig } from "./particlesConfig";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material"; // Import Dialog
+
+const styles = {
+  pageContainer: {
+    display: "flex",
+    top: 0,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "200vh",
+    padding: "20px",
+    textAlign: "center",
+    fontFamily: "Poppins, sans-serif",
+    position: "relative",
+  },
+  customCursor: {
+    position: "absolute",
+    width: "30px",
+    height: "30px",
+    borderRadius: "50%",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    transform: "translate(-50%, -50%)",
+    pointerEvents: "none",
+    zIndex: 1000,
+  },
+  title: {
+    fontSize: "4rem",
+    color: "#fff",
+    marginBottom: "20px",
+    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+  },
+  body: {
+    fontSize: "2rem",
+    color: "#fff",
+    marginBottom: "20px",
+    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+  },
+  countdown: {
+    fontSize: "1.5rem",
+    color: "#fff",
+    marginBottom: "20px",
+    textShadow: "1px 1px 3px rgba(0, 0, 0, 0.3)",
+  },
+  lottieContainer: {
+    width: "300px",
+    height: "300px",
+    marginBottom: "500px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+  },
+  lottieLarge: {
+    width: "100%",
+    height: "100%",
+  },
+  balloonAnimationContainer: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    zIndex: -1,
+    pointerEvents: "none",
+  },
+  button: {
+    padding: "15px 30px",
+    fontSize: "1.5rem",
+    color: "#fff",
+    backgroundColor: "#ff66b3",
+    border: "none",
+    borderRadius: "12px",
+    cursor: "pointer",
+    boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.3)",
+    transition: "background-color 0.3s, transform 0.3s",
+  },
+  canvasContainer: {
+    width: "100%",
+    height: "500px",
+  },
+  confettiContainer: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    pointerEvents: "none",
+    zIndex: -1,
+  },
+  fireworksContainer: {
+    position: "fixed",
+    top: "20%",
+    left: "50%",
+    width: "60vw",
+    height: "60vh",
+    pointerEvents: "none",
+    transform: "translateX(-50%)",
+    zIndex: -1,
+  },
+  particles: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: -1,
+  },
+  parallaxContainer: {
+    width: "100%",
+    marginBottom: "10px",
+  },
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [theme, setTheme] = useState("day");
+  const [isBirthday, setIsBirthday] = useState(false);
+  const [countdown, setCountdown] = useState("");
+  const [cursorStyle, setCursorStyle] = useState({ top: 0, left: 0 });
+  const [openModal, setOpenModal] = useState(false); // State untuk modal
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const targetDate = dayjs("2024-10-08"); // Adjust birthday date
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = dayjs();
+      const diff = targetDate.diff(now);
+      if (diff <= 0) {
+        setIsBirthday(true);
+        setCountdown("🎉 It's your Birthday! 🎉");
+      } else {
+        const days = targetDate.diff(now, "day");
+        const hours = targetDate.diff(now, "hour") % 24;
+        const minutes = targetDate.diff(now, "minute") % 60;
+        const seconds = targetDate.diff(now, "second") % 60;
+        setCountdown(
+          `${days}d ${hours}h ${minutes}m ${seconds}s until your birthday!`
+        );
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    setTheme(hour >= 6 && hour < 18 ? "day" : "night");
+  }, []);
+
+  const handleCursorMove = (e) => {
+    setCursorStyle({ top: e.clientY, left: e.clientX });
+  };
+
+  const sound = new Howl({
+    src: ["/happy-birthday.mp3"],
+    autoplay: false,
+    loop: false,
+    volume: 1.0,
+  });
+
+  const handleButtonClick = () => {
+    sound.play();
+    setOpenModal(true); // Membuka modal
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false); // Menutup modal
+  };
+
+  const particlesInit = useCallback(async (engine) => {
+    await loadSlim(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async (container) => {
+    console.log(container);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      style={{
+        ...styles.pageContainer,
+        background:
+          theme === "day"
+            ? "linear-gradient(135deg, #FFDEE9, #B5FFFC)"
+            : "linear-gradient(135deg, #0F2027, #203A43, #2C5364)",
+      }}
+      onMouseMove={handleCursorMove}
+    >
+      {/* Custom Cursor */}
+      <div
+        className="custom-cursor"
+        style={{
+          ...styles.customCursor,
+          top: cursorStyle.top,
+          left: cursorStyle.left,
+        }}
+      />
+
+      {/* Parallax Section */}
+      <Parallax
+        strength={300}
+        bgImage={theme === "day" ? "/day-theme-bg.jpg" : "/night-theme-bg.jpg"}
+        style={styles.parallaxContainer}
+      >
+        <div style={{ height: 500 }}>
+          <motion.h1 style={styles.title}>Happy Birthday</motion.h1>
+          <motion.h1 style={styles.body}>- Denada Putri -</motion.h1>
+          <motion.p style={styles.countdown}>{countdown}</motion.p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </Parallax>
+
+      {/* Particle Effect */}
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={{
+          ...particlesConfig,
+          background: {
+            color: {
+              value: theme === "day" ? "#FFDEE9" : "#0F2027",
+            },
+          },
+        }}
+        loaded={particlesLoaded}
+        style={styles.particles}
+      />
+
+      {/* Birthday Cake Animation */}
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5, duration: 1 }}
+        style={styles.lottieContainer}
+      >
+        <Player
+          autoplay
+          loop
+          src={birthdayCakeAnimation}
+          style={styles.lottieLarge}
+        />
+      </motion.div>
+
+      {/* Balloons covering the entire screen */}
+      <motion.div style={styles.balloonAnimationContainer}>
+        <Player
+          autoplay
+          loop
+          src={balloonsAnimation}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </motion.div>
+
+      {/* Interactive Button */}
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        style={styles.button}
+        onClick={handleButtonClick}
+      >
+        Make a Wish 🎁
+      </motion.button>
+
+      {/* 3D Element: Rotating Stars */}
+      <motion.div style={styles.canvasContainer}>
+        <Canvas>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+          <Stars radius={100} depth={50} count={5000} factor={4} fade />
+          <OrbitControls />
+        </Canvas>
+      </motion.div>
+
+      {/* Confetti */}
+      {isBirthday && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          style={styles.confettiContainer}
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+          <Player
+            autoplay
+            loop
+            src={confettiAnimation}
+            style={styles.lottieConfetti}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        </motion.div>
+      )}
+
+      {/* Fireworks */}
+      {isBirthday && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          style={styles.fireworksContainer}
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+          <Player
+            autoplay
+            loop
+            src={fireworksAnimation}
+            style={styles.lottieFireworks}
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </motion.div>
+      )}
+
+      {/* Modal for making a wish */}
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>🎉 Make a Wish 🎉</DialogTitle>
+        <DialogContent>
+          <p>Wishing you a day filled with happiness!</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </motion.div>
   );
 }
